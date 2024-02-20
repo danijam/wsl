@@ -37,6 +37,24 @@
         state: latest
         update_cache: true
 
+    # Configure git credential manager for WSL
+    - name: Set global Git credential helper
+      ansible.builtin.git_config:
+        scope: global
+        name: credential.helper
+        value: "/mnt/c/Program\\ Files/Git/mingw64/bin/git-credential-manager.exe"
+      become: yes
+      become_user: "{{ username }}"
+
+    # Configure the Azure DevOps Helper # git config --global credential.https://dev.azure.com.useHttpPath true
+    - name: Set global Git credential helper ADO
+      ansible.builtin.git_config:
+        scope: global
+        name: credential.https://dev.azure.com.useHttpPath
+        value: true
+      become: yes
+      become_user: "{{ username }}"
+
     - name: Add Docker GPG apt Key
       apt_key:
         url: https://download.docker.com/linux/ubuntu/gpg
