@@ -24,6 +24,19 @@
           - gnupg
         state: present
 
+    # Add the git ppa
+    - name: Add Git PPA
+      apt_repository:
+        repo: ppa:git-core/ppa
+        state: present
+
+    # Install git
+    - name: Install git
+      apt:
+        name: git
+        state: latest
+        update_cache: true
+
     - name: Add Docker GPG apt Key
       apt_key:
         url: https://download.docker.com/linux/ubuntu/gpg
@@ -102,7 +115,7 @@
 
     - name: Add the Azure CLI software repository
       apt_repository:
-        repo: "deb [arch={{ ansible_architecture }} signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/azure-cli/ {{ ansible_distribution_release }} main"
+        repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/azure-cli/ {{ ansible_distribution_release }} main"
         state: present
         filename: azure-cli
       become: yes
@@ -113,3 +126,62 @@
           - azure-cli
         state: latest
         update_cache: true
+
+    - name: Install k9s using snap
+      ansible.builtin.snap:
+        name: k9s
+        classic: yes
+        state: present
+
+    - name: Download Helm GPG key
+      ansible.builtin.get_url:
+        url: https://baltocdn.com/helm/signing.asc
+        dest: /tmp/helm.asc
+        mode: "0644"
+
+    - name: Import Helm GPG key
+      ansible.builtin.shell:
+        cmd: gpg --dearmor -o /usr/share/keyrings/helm.gpg /tmp/helm.asc
+        creates: /usr/share/keyrings/helm.gpg
+
+    - name: Add the Helm software repository
+      apt_repository:
+        repo: "deb [arch=amd64 signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main"
+        state: present
+        filename: helm-stable-debian
+      become: yes
+
+    - name: Update apt and install helm
+      apt:
+        name:
+          - helm
+        state: latest
+        update_cache: true
+      become: yes
+
+      # Install kubectl
+    - name: Download kubectl GPG key
+      ansible.builtin.get_url:
+        url: https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key
+        dest: /tmp/kubectl.key
+        mode: "0644"
+
+    - name: Import kubectl GPG key
+      ansible.builtin.shell:
+        cmd: gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg /tmp/kubectl.key
+        creates: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+    - name: Add the kubectl software repository
+      apt_repository:
+        repo: "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /"
+        state: present
+        filename: helm-stable-debian
+      become: yes
+
+    - name: Update apt and install kubectl
+      apt:
+        name:
+          - kubectl
+        state: latest
+        update_cache: true
+      become: yes
