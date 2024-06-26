@@ -53,5 +53,17 @@ for dir in "$repos_dir"/*; do
         awk '$2 == "[gone]" {print $1}' | \
         xargs -r git branch -D
 
+        # if there are any branches left apart from main then continue to the next directory
+        if [ -n "$(git branch | grep -v main)" ]; then
+            echo "Branches other than main found in $dir"
+            continue
+        fi
+
+        # at this point we have a repo that has no branches other than main,
+        # no uncommitted changes and is up to date with the remote
+        # so we can delete it
+        cd ..
+        echo "Deleting $dir"
+        rm -rf "$dir"
     fi
 done
