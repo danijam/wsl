@@ -15,8 +15,6 @@ fi
 for dir in "$repos_dir"/*; do
     if [ -d "$dir" ]; then
         echo "Processing directory: $dir"
-        # require user input to continue
-        read -p "Press enter to continue"
 
         # if not a git repo then continue to the next directory
         if [ ! -d "$dir/.git" ]; then
