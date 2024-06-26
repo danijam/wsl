@@ -32,6 +32,11 @@ for dir in "$repos_dir"/*; do
             echo "Not on main branch: $current_branch"
             continue
         fi
+        # if the current branch is actually master then continue to the next directory
+        if [ "$current_branch" == "master" ]; then
+            echo "repo using master: $current_branch"
+            continue
+        fi
         echo "On main branch"
 
         # fetch latest from remote
@@ -67,7 +72,7 @@ for dir in "$repos_dir"/*; do
         # at this point we have a repo that has no branches other than main,
         # no uncommitted changes and is up to date with the remote
         # so we can delete it
-        cd ..
+        cd $repos_dir
         echo "Deleting $dir"
         rm -rf "$dir"
     fi
