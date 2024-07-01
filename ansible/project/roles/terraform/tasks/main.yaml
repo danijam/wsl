@@ -1,0 +1,21 @@
+- name: Add hasicorp key
+  ansible.builtin.apt_key:
+    url: https://apt.releases.hashicorp.com/gpg
+    state: present
+  become: true
+
+- name: Add hasicorp repository
+  ansible.builtin.apt_repository:
+    repo: deb https://apt.releases.hashicorp.com {{ ansible_distribution_release }} main
+    state: present
+    update_cache: true
+  become: true
+
+- name: Install terraform
+  ansible.builtin.apt:
+    name:
+      - terraform
+    state: latest
+    update_cache: true
+    cache_valid_time: 3600
+  become: true

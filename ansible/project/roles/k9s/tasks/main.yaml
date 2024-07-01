@@ -1,0 +1,14 @@
+- name: Define k9s version
+  ansible.builtin.set_fact:
+    k9s_version: v0.32.5
+
+- name: Download k9s package
+  ansible.builtin.get_url:
+    url: https://github.com/derailed/k9s/releases/download/{{ k9s_version }}/k9s_linux_amd64.deb
+    dest: "/tmp/k9s_linux_amd64.deb"
+  become: yes
+
+- name: Install k9s
+  ansible.builtin.apt:
+    deb: "/tmp/k9s_linux_amd64.deb"
+  become: yes

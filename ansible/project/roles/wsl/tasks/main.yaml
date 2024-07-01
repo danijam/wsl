@@ -1,0 +1,15 @@
+- name: Add wslu upstream repository
+  ansible.builtin.apt_repository:
+    repo: ppa:wslutilities/wslu
+    codename: jammy # noble not currently supported on this ppa
+    state: present
+    update_cache: true
+  become: true
+
+- name: Install wslu
+  ansible.builtin.apt:
+    name: wslu
+    state: latest
+    update_cache: true
+    cache_valid_time: 3600
+  become: true

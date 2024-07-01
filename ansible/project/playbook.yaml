@@ -1,0 +1,19 @@
+# Roles and Include Files
+# Define Variables
+# User vars directory within roles for role specific vars
+# Use handlers to manager service restarts more effectively at the end of a run
+# Ansible Galaxy for community created roles
+---
+- name: Setup WSL Distro
+  hosts: all
+  become: true
+  roles:
+    - common
+    - wsl
+    - git
+    - docker
+    - azure
+    - k8s
+    - k9s
+    - helm
+    - terraform

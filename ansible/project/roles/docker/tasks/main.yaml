@@ -1,0 +1,61 @@
+- name: Debug architecture value
+  ansible.builtin.debug:
+    msg: "The architecture of the target system is: {{ ansible_architecture }}"
+
+- name: Debug distribution release value
+  ansible.builtin.debug:
+    msg: "The distribution release of the target system is: {{ ansible_distribution_release }}"
+
+- name: Add Docker GPG apt Key
+  ansible.builtin.apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+  become: true
+
+- name: Add Docker Repository
+  ansible.builtin.apt_repository:
+    repo: deb https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+    state: present
+    update_cache: true
+  become: true
+
+- name: Install docker
+  ansible.builtin.apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-compose-plugin
+    state: latest
+    update_cache: true
+    cache_valid_time: 3600
+  notify: restart docker
+  become: true
+
+- name: Add docker group
+  ansible.builtin.group:
+    name: docker
+    state: present
+  become: true
+
+- name: Add user to docker group
+  ansible.builtin.user:
+    name: "{{ username }}"
+    groups: docker
+    append: true
+  become: true
+# - name: Copy etc files
+#   ansible.builtin.copy:
+#     src: /home/{{ username }}/ansible/etc/
+#     dest: /etc/
+#     owner: root
+#     group: root
+#     mode: 0644
+#   become: yes
+# - name: Restart docker
+#   ansible.builtin.systemd_service:
+#     name: docker.service
+#     state: restarted
+#     daemon_reload: yes
+#   become: yes

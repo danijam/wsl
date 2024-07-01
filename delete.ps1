@@ -2,7 +2,7 @@
 $ErrorActionPreference = "Stop"
 
 # Check if the Ubuntu-22.04 distro is already installed
-$DistroName = "Ubuntu-22.04"
+$DistroName = "Ubuntu-24.04"
 
 Write-Host "Checking if the '$($DistroName)' distro is already installed..." -ForegroundColor Yellow
 $WSLDistros = wsl --list --quiet | ForEach-Object { [PSCustomObject]@{ Name = $_ } }

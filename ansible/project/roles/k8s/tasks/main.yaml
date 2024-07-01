@@ -1,0 +1,25 @@
+- name: Define k8s version
+  ansible.builtin.set_fact:
+    k8s_version: v1.28
+
+- name: Add kubernetes key
+  ansible.builtin.apt_key:
+    url: "https://pkgs.k8s.io/core:/stable:/{{ k8s_version }}/deb/Release.key"
+    state: present
+  become: true
+
+- name: Add kubernetes Repository
+  ansible.builtin.apt_repository:
+    repo: deb https://pkgs.k8s.io/core:/stable:/{{ k8s_version }}/deb/ /
+    state: present
+    update_cache: true
+  become: true
+
+- name: Install kubectl
+  ansible.builtin.apt:
+    name:
+      - kubectl
+    state: latest
+    update_cache: true
+    cache_valid_time: 3600
+  become: true

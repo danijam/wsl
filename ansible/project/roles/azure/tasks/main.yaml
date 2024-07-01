@@ -1,0 +1,21 @@
+- name: Add Microsoft Key
+  ansible.builtin.apt_key:
+    url: https://packages.microsoft.com/keys/microsoft.asc
+    state: present
+  become: true
+
+- name: Add Azure CLI Repository
+  ansible.builtin.apt_repository:
+    repo: deb https://packages.microsoft.com/repos/azure-cli/ {{ ansible_distribution_release }} main
+    state: present
+    update_cache: true
+  become: true
+
+- name: Install Azure CLI
+  ansible.builtin.apt:
+    name:
+      - azure-cli
+    state: latest
+    update_cache: true
+    cache_valid_time: 3600
+  become: true

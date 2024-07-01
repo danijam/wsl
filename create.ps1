@@ -9,7 +9,7 @@ foreach ($Function in $Functions) {
 }
 
 # Check if the Ubuntu-22.04 distro is already installed
-$DistroName = "Ubuntu-22.04"
+$DistroName = "Ubuntu-24.04"
 $DistroExe = $DistroName.ToLower().Replace("-", "").Replace(".", "")
 
 # Call the create distro function

@@ -12,7 +12,7 @@ function Install-Distro {
         return
     }
 
-    # Install the Ubuntu-22.04 distro
+    # Install the distro
     Write-Host "Installing the $DistroName distro..." -ForegroundColor Yellow
     wsl --install -d $DistroName -n
     Write-Host "The $DistroName distro has been installed." -ForegroundColor Yellow
