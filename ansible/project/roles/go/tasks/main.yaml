@@ -1,0 +1,50 @@
+- name: Check if Go is already installed at the desired version
+  command: /usr/local/go/bin/go version
+  register: go_version_installed
+  ignore_errors: true
+  changed_when: false
+
+- name: Remove existing Go installation if version does not match
+  ansible.builtin.shell: "rm -rf /usr/local/go"
+  when: go_version_installed.stdout is not search(go_version)
+  become: true
+  register: go_removed
+
+- name: Download and install Go if not already installed or version mismatch
+  block:
+    - name: Download Go tarball
+      get_url:
+        url: "https://dl.google.com/go/go{{ go_version }}.{{ go_os }}-{{ go_arch }}.tar.gz"
+        dest: "/tmp/go{{ go_version }}.{{ go_os }}-{{ go_arch }}.tar.gz"
+        mode: "0755"
+
+    - name: Extract Go tarball to /usr/local
+      ansible.builtin.unarchive:
+        src: "/tmp/go{{ go_version }}.{{ go_os }}-{{ go_arch }}.tar.gz"
+        dest: "/usr/local"
+        remote_src: true
+  when: go_removed.changed
+  become: true
+
+# - name: Set Go PATH in profile
+#   ansible.builtin.lineinfile:
+#     path: "/etc/profile"
+#     line: "export PATH=$PATH:/usr/local/go/bin"
+#     create: yes
+#   become: true
+
+- name: Set Go PATH in profile for all users
+  ansible.builtin.lineinfile:
+    path: /etc/profile.d/go.sh
+    line: "export PATH=$PATH:/usr/local/go/bin"
+    create: yes
+  become: yes
+
+- name: Check Go version
+  command: "/usr/local/go/bin/go version"
+  register: go_version_output
+  changed_when: false
+
+- name: Show Go version
+  debug:
+    msg: "{{ go_version_output.stdout }}"
