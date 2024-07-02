@@ -19,3 +19,10 @@
     update_cache: true
     cache_valid_time: 3600
   become: true
+
+- name: Set alias for Terraform ('tf' command) for all users
+  ansible.builtin.lineinfile:
+    path: /etc/profile.d/terraform.sh
+    line: 'alias tf="terraform"'
+    create: yes
+  become: yes
