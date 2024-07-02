@@ -26,3 +26,25 @@
     line: 'alias tf="terraform"'
     create: yes
   become: yes
+
+- name: Set Terraform autocomplete for 'tf' alias for all users
+  ansible.builtin.lineinfile:
+    path: /etc/profile.d/terraform.sh
+    line: "complete -C /usr/bin/terraform tf"
+    create: yes
+  become: yes
+
+- name: Check if Terraform autocomplete is already installed
+  ansible.builtin.shell:
+    cmd: "grep -q 'complete -C /usr/bin/terraform terraform' ~/.bashrc"
+  register: autocomplete_check
+  ignore_errors: true
+  become: true
+  become_user: "{{ username }}"
+
+- name: Install Terraform autocomplete for all users
+  ansible.builtin.shell:
+    cmd: "terraform -install-autocomplete"
+  when: autocomplete_check.rc != 0
+  become: true
+  become_user: "{{ username }}"
