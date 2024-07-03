@@ -26,19 +26,13 @@
   when: go_removed.changed
   become: true
 
-# - name: Set Go PATH in profile
-#   ansible.builtin.lineinfile:
-#     path: "/etc/profile"
-#     line: "export PATH=$PATH:/usr/local/go/bin"
-#     create: yes
-#   become: true
-
-- name: Set Go PATH in profile for all users
+- name: Set Go PATH
   ansible.builtin.lineinfile:
-    path: /etc/profile.d/go.sh
+    path: ~/.bashrc
     line: "export PATH=$PATH:/usr/local/go/bin"
     create: yes
   become: yes
+  become_user: "{{ username }}"
 
 - name: Check Go version
   command: "/usr/local/go/bin/go version"
