@@ -2,5 +2,8 @@
     "files.insertFinalNewline": true,
     "files.trimTrailingWhitespace": true,
     "editor.formatOnSave": true,
-    "editor.formatOnPaste": true
+    "editor.formatOnPaste": true,
+    "cSpell.words": [
+        "lineinfile"
+    ]
 }

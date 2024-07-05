@@ -28,3 +28,13 @@
     value: true
   become: true
   become_user: "{{ username }}"
+
+# This is useful for repos that use the squash merge strategy and want to clean up branches that have been merged
+- name: Add gitclean to bashrc
+  ansible.builtin.lineinfile:
+    path: ~/.bashrc
+    line: |
+      alias gitclean="git fetch -p && git for-each-ref --format '%(refname:short) %(upstream:track)' | awk '\$2 == \"[gone]\" {print \$1}' | xargs -r git branch -D"
+    create: yes
+  become: yes
+  become_user: "{{ username }}"
