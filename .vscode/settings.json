@@ -4,6 +4,10 @@
     "editor.formatOnSave": true,
     "editor.formatOnPaste": true,
     "cSpell.words": [
+        "buildx",
+        "containerd",
+        "dnsutils",
+        "keyrings",
         "lineinfile"
     ]
 }

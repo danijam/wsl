@@ -4,7 +4,7 @@
     state: latest
     update_cache: true
     cache_valid_time: 3600
-  become: yes
+  become: true
 
 - name: Upgrade the OS (apt-get dist-upgrade)
   ansible.builtin.apt:
@@ -12,7 +12,7 @@
     state: latest
     update_cache: true
     cache_valid_time: 3600
-  become: yes
+  become: true
 
 - name: Install common packages
   ansible.builtin.apt:
@@ -24,10 +24,11 @@
       - gnupg
       - dnsutils
       - xdg-utils
+      - tree
     state: latest
     update_cache: yes
     cache_valid_time: 3600
-  become: yes
+  become: true
 
 - name: Create directory keys
   ansible.builtin.file:
