@@ -1,0 +1,17 @@
+- name: Install nvm
+  ansible.builtin.shell: >
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash &&
+  args:
+    creates: "$HOME/.nvm/nvm.sh"
+  become: true
+  become_user: "{{ username }}"
+
+- name: Install node
+  ansible.builtin.shell: |
+    source $HOME/.nvm/nvm.sh && nvm install 20.16.0
+  args:
+    executable: /bin/bash
+    chdir: "$HOME"
+    creates: "$HOME/.nvm/versions/node/v20.16.0"
+  become: true
+  become_user: "{{ username }}"
