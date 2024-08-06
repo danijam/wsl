@@ -7,7 +7,9 @@
 
 - name: Install git
   ansible.builtin.apt:
-    name: git
+    name:
+      - git
+      - git-lfs
     state: latest
     update_cache: true
     cache_valid_time: 3600
