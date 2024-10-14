@@ -31,7 +31,15 @@
     path: ~/.bashrc
     line: "export PATH=$PATH:/usr/local/go/bin"
     create: yes
-  become: yes
+  become: true
+  become_user: "{{ username }}"
+
+- name: Set user go path
+  ansible.builtin.lineinfile:
+    path: ~/.bashrc
+    line: "export PATH=$PATH:$(go env GOPATH)/bin"
+    create: yes
+  become: true
   become_user: "{{ username }}"
 
 - name: Check Go version
