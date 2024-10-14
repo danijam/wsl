@@ -38,5 +38,7 @@
     line: |
       alias gitclean="git fetch -p && git for-each-ref --format '%(refname:short) %(upstream:track)' | awk '\$2 == \"[gone]\" {print \$1}' | xargs -r git branch -D"
     create: yes
-  become: yes
+    state: present
+    regexp: "^alias gitclean="
+  become: true
   become_user: "{{ username }}"
